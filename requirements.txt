@@ -1,0 +1,7 @@
+pandas
+numpy
+scikit-learn
+MetaTrader5
+yfinance
+ta
+requests
