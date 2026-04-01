@@ -1,0 +1,138 @@
+=======================================================
+  GOLD AI BOT — MODEL TRAINING PIPELINE
+  2026-04-01 16:14:06
+=======================================================
+📂 Loaded features: 9,960 rows
+   Range: 2025-10-27 22:45:00 → 2026-04-01 10:00:00
+📋 Loaded 31 columns from feature_columns.json
+✅ Using 31 model features
+
+📊 Dataset: 9,960 rows × 31 features
+📈 Signal distribution:
+         SELL (0):   2567  (25.8%)  ███████
+     NO TRADE (1):   4256  (42.7%)  ████████████
+          BUY (2):   3137  (31.5%)  █████████
+
+🔍 Running data sanity checks...
+   ⚠️  High-correlation pairs (>0.98) — consider removing one:
+       ATR_pct ↔ ATR: 0.992
+       momentum_5 ↔ return_5: 0.996
+
+   Feature value ranges:
+       momentum_10                    range = 627.2700
+       momentum_5                     range = 625.6200
+       MACD                           range = 134.8561
+       MACD_signal                    range = 116.3540
+       ATR                            range = 86.6064
+
+   ✅ All critical checks passed
+
+📅 Time-based split:
+   Train: 7,968 rows  (80%)
+   Test:  1,992 rows  (20%)
+
+🔄 5-fold TimeSeriesSplit cross-validation
+   (Training on past → validating on future, no data leakage)
+
+   Fold 1: acc=0.3833  best_iter=1500  train= 1328  val=1328  ⚠️ 
+   Fold 2: acc=0.4488  best_iter=1500  train= 2656  val=1328  ⚠️ 
+   Fold 3: acc=0.3983  best_iter=1500  train= 3984  val=1328  ⚠️ 
+   Fold 4: acc=0.3479  best_iter=1500  train= 5312  val=1328  ⚠️ 
+   Fold 5: acc=0.3803  best_iter=1500  train= 6640  val=1328  ⚠️ 
+
+   CV Summary: 0.3917 ± 0.0329
+   ⚠️  Low CV accuracy (<45%) — model may not be learning
+      Check: feature stationarity, signal threshold, data quality
+
+🤖 Training final model...
+   Train: 7,968 rows  |  Early stopping monitor: 1,992 rows
+[0]	validation_0-mlogloss:1.09752
+[100]	validation_0-mlogloss:1.10313
+[200]	validation_0-mlogloss:1.11732
+[300]	validation_0-mlogloss:1.12737
+[400]	validation_0-mlogloss:1.13915
+[500]	validation_0-mlogloss:1.15097
+[600]	validation_0-mlogloss:1.16313
+[700]	validation_0-mlogloss:1.17452
+[800]	validation_0-mlogloss:1.18423
+[900]	validation_0-mlogloss:1.19390
+[1000]	validation_0-mlogloss:1.20536
+[1100]	validation_0-mlogloss:1.21508
+[1200]	validation_0-mlogloss:1.22455
+[1300]	validation_0-mlogloss:1.23430
+[1400]	validation_0-mlogloss:1.24164
+[1499]	validation_0-mlogloss:1.25022
+
+✅ Training complete — ran all 1500 rounds (no early stopping)
+
+=======================================================
+  TEST SET EVALUATION
+=======================================================
+
+  Overall Accuracy: 0.3579  (35.79%)
+
+  Per-class results:
+  Class         Precision   Recall       F1   Support
+  ----------------------------------------------------
+  SELL             0.3284   0.2255   0.2674       683
+  NO TRADE         0.4073   0.3733   0.3895       659
+  BUY              0.3406   0.4815   0.3990       650
+
+  Confusion Matrix:
+                Pred.SELL  Pred.NO TRADE     Pred.BUY
+Act.SELL              154            184          345
+Act.NO TRADE          152            246          261
+Act.BUY               163            174          313
+
+  Prediction Confidence (threshold = 55%):
+  Mean:    0.5584
+  Median:  0.5318
+  Min:     0.3344
+  Max:     0.9686
+  Trades above 55%: 889 / 1,992  (44.6%)
+
+  Confidence by predicted class:
+  SELL        : mean=0.5340  ≥55%:  178 (38.0%)
+  NO TRADE    : mean=0.5287  ≥55%:  216 (35.8%)
+  BUY         : mean=0.5903  ≥55%:  495 (53.9%)
+
+🔥 Top 20 Features by Importance:
+  Rank  Feature                          Importance  % Total   Cumul%
+  --------------------------------------------------------------------
+     1  ATR                                0.041624    4.16%    4.16%  ████████
+     2  volatility_10                      0.039939    3.99%    8.16%  ███████
+     3  ATR_pct                            0.038851    3.89%   12.04%  ███████
+     4  EMA_diff_pct                       0.038769    3.88%   15.92%  ███████
+     5  volatility_20                      0.037448    3.74%   19.66%  ███████
+     6  MACD                               0.036674    3.67%   23.33%  ███████
+     7  price_vs_EMA20                     0.036369    3.64%   26.97%  ███████
+     8  MACD_signal                        0.035784    3.58%   30.55%  ███████
+     9  BB_width                           0.035522    3.55%   34.10%  ███████
+    10  spread_norm                        0.035511    3.55%   37.65%  ███████
+    11  momentum_10                        0.035088    3.51%   41.16%  ███████
+    12  MACD_hist                          0.033412    3.34%   44.50%  ██████
+    13  RSI                                0.033378    3.34%   47.84%  ██████
+    14  price_position                     0.033021    3.30%   51.14%  ██████
+    15  BB_position                        0.032405    3.24%   54.38%  ██████
+    16  rsi_lag_1                          0.031209    3.12%   57.50%  ██████
+    17  rsi_lag_5                          0.031075    3.11%   60.61%  ██████
+    18  momentum_5                         0.031023    3.10%   63.71%  ██████
+    19  rsi_lag_3                          0.030996    3.10%   66.81%  ██████
+    20  rsi_lag_2                          0.030688    3.07%   69.88%  ██████
+
+  💾 Full importance table saved: d:\privet\gold_ai_trading_bot\models\saved_models\feature_importance.csv
+
+💾 Saved files:
+   Model (XGB native):  d:\privet\gold_ai_trading_bot\models\saved_models\xgb_model.json
+   Model (versioned):   d:\privet\gold_ai_trading_bot\models\saved_models\xgb_model_20260401_161518.json
+   Model (pkl):         d:\privet\gold_ai_trading_bot\models\saved_models\xgb_model.pkl
+   Metadata:            d:\privet\gold_ai_trading_bot\models\saved_models\model_metadata.json
+
+=======================================================
+  TRAINING COMPLETE
+  CV Accuracy:   0.3917 ± 0.0329
+  Test Accuracy: 0.3579
+  Log saved:     d:\privet\gold_ai_trading_bot\models\saved_models\training_log.txt
+=======================================================
+
+✅ Next step: run predict_model.py

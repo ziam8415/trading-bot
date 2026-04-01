@@ -5,3 +5,4 @@ MetaTrader5
 yfinance
 ta
 requests
+xgboost

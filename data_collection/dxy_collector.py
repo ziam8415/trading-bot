@@ -18,3 +18,6 @@ def get_dxy_data():
 if __name__ == "__main__":
     dxy = get_dxy_data()
     print(dxy.tail())
+
+
+   
