@@ -6,3 +6,4 @@ yfinance
 ta
 requests
 xgboost
+python-telegram-bot
